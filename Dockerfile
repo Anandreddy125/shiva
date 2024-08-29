@@ -1,31 +1,20 @@
-# Use an official Node.js runtime as a parent image
-FROM node:20-alpine
+# Use Node.js Alpine base image
+FROM node:alpine
 
-# Set the working directory inside the container
-WORKDIR /usr/src/reportersapp
+# Create and set the working directory inside the container
+WORKDIR /app
 
-# Copy package.json and package-lock.json for dependency installation
-COPY package*.json ./
+# Copy package.json and package-lock.json to the working directory
+COPY package.json package-lock.json /app/
 
-# Install the dependencies
-RUN npm install \
+# Install dependencies
+RUN npm install
 
-    && npm install --save-dev vite @vitejs/plugin-react
+# Copy the entire codebase to the working directory
+COPY . /app/
 
-# Copy the rest of the application files
-COPY . .
+# Expose the port your app runs on (replace <PORT_NUMBER> with your app's actual port)
+EXPOSE 3000
 
-# Build the React application
-RUN npm run build
-
-# Create the _redirects file for SPA routing
-RUN echo '/* /index.html 200' > dist/_redirects
-
-# Install serve globally
-RUN npm install -g serve
-
-# Expose the port where the application will run
-EXPOSE 9010
-
-# Command to serve the application
-CMD ["serve", "-s", "dist", "-l", "9010"]
+# Define the command to start your application (replace "start" with the actual command to start your app)
+CMD ["npm", "start"]
