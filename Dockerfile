@@ -16,7 +16,7 @@ RUN npm install \
 COPY . .
 
 # Build the React application
-RUN npm run build
+#RUN npm run build
 
 # Create the _redirects file for SPA routing
 RUN echo '/* /index.html 200' > dist/_redirects
@@ -25,7 +25,7 @@ RUN echo '/* /index.html 200' > dist/_redirects
 RUN npm install -g serve
 
 # Expose the port where the application will run
-EXPOSE 9010
+EXPOSE 3000
 
 # Command to serve the application
 CMD ["serve", "-s", "dist", "-l", "9010"]
