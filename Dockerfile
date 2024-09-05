@@ -10,7 +10,7 @@ RUN npm install
 
 # Copy the rest of the code and build the project
 COPY . .
-RUN npm run build
+#RUN npm run build
 
 # Use a minimal server image to serve the built files
 FROM nginx:alpine
