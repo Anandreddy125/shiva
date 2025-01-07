@@ -17,8 +17,12 @@ ARG MODE=docker-prod
 RUN npm run build:${MODE}
 
 # Stage 2: Serve with Nginx
+# Production stage
 FROM nginx:1.25.4-alpine-slim AS prod
+
 COPY --from=builder /app/dist /usr/share/nginx/html
-COPY nginx.conf  /etc/nginx/conf.d
+COPY config/nginx.conf /etc/nginx/conf.d  # Adjusted path if necessary
+
 EXPOSE 3000
 CMD ["nginx", "-g", "daemon off;"]
+
