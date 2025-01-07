@@ -5,7 +5,7 @@ export default defineConfig({
   plugins: [react()],
   build: {
     rollupOptions: {
-      input: '/src/main.tsx', // Adjust this if necessary
+      input: 'src/main.tsx', // Adjust this if necessary
     },
   },
 });
