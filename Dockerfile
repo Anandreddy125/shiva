@@ -1,25 +1,29 @@
 # Stage 1: Build
 FROM node:18.17.0-alpine AS build
 
+# Set the working directory
 WORKDIR /app
 
 # Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install --cache /path/to/larger/directory
+RUN npm install
 
-# Copy the rest of the application code (including src/ folder)
+# Copy the rest of the application code
 COPY . .
 
 # Build the application
 RUN npm run build
 
 # Stage 2: Serve
-FROM node:alpine
+FROM nginx:alpine
 
+# Copy the built files from the build stage to the Nginx default directory
 COPY --from=build /app/dist /usr/share/nginx/html
 
+# Expose port 80
 EXPOSE 80
 
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
