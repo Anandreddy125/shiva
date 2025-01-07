@@ -1,5 +1,5 @@
 # Stage 1: Build
-FROM node:18.17.0 AS build
+FROM node:18.17.0-alpine AS build
 
 # Set the working directory
 WORKDIR /app
@@ -9,7 +9,6 @@ COPY package*.json ./
 
 # Install dependencies
 RUN npm install --cache /tmp/empty-cache
-
 
 # Copy the rest of the application code
 COPY . .
