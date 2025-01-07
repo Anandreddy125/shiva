@@ -1,28 +1,30 @@
 # Stage 1: Build
-FROM node:20-alpine AS builder
+FROM node:18.17.0 AS build
 
+# Set the working directory
 WORKDIR /app
 
-# Copy package.json and lock file
+# Copy package.json and package-lock.json to the working directory
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+RUN npm install --cache /tmp/empty-cache
 
-# Copy all project files
+
+# Copy the rest of the application code
 COPY . .
 
-# Pass the mode argument to Vite's build process
-ARG MODE=docker-prod
-RUN npm run build:${MODE}
+# Build the application
+RUN npm run build
 
-# Stage 2: Serve with Nginx
-# Production stage
-FROM nginx:1.25.4-alpine-slim AS prod
+# Stage 2: Serve
+FROM nginx:alpine
 
-COPY --from=builder /app/dist /usr/share/nginx/html
-COPY config/nginx.conf /etc/nginx/conf.d  # Adjusted path if necessary
+# Copy built files from the build stage to the Nginx default directory
+COPY --from=build /app/dist /usr/share/nginx/html
 
+# Expose port 80
 EXPOSE 3000
-CMD ["nginx", "-g", "daemon off;"]
 
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
