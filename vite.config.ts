@@ -1,35 +1,30 @@
-import path from "path";
+import path from 'path';
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { visualizer } from 'vite-plugin-source-map-visualizer';
 
 export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(__dirname, './src'), // Resolve @ to src
     },
   },
-  server: {
-    host: '0.0.0.0',
-    port: 3000, // Optional: Specify the port if needed
-  },
-  build: { 
-    chunkSizeWarningLimit: 5000,
+  build: {
     rollupOptions: {
-      output: {
-        manualChunks(id) {
-          if (id.includes('node_modules')) {
-            return id.toString().split('node_modules/')[1].split('/')[0].toString();
-          }
-        },
+      input: path.resolve(__dirname, 'src/main.tsx'),  // Ensure correct path for entry file
+    },
+    chunkSizeWarningLimit: 5000,
+    output: {
+      manualChunks(id) {
+        if (id.includes('node_modules')) {
+          return id.toString().split('node_modules/')[1].split('/')[0];
+        }
       },
     },
-    // Ensure the base is set correctly if serving from a subdirectory
-    base: '/reporters-app/', // Adjust this path if necessary
   },
-  // Configure fallback for SPA routing
-  esbuild: {
-    // You may configure additional options for ESBuild if necessary
+  base: '/',  // Adjust if necessary for subdirectory
+  server: {
+    host: '0.0.0.0',
+    port: 3000,
   },
 });
